@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
 const CheckoutPage = () => {
   const cartItems = useSelector((state) => state.cart.cartItems);
@@ -9,7 +10,8 @@ const CheckoutPage = () => {
   const totalPrice = cartItems
     .reduce((acc, item) => acc + item.newPrice, 0)
     .toFixed(2);
-  const currentUser = true; //todo: get from authorized state
+
+  const { currentUser } = useAuth();
 
   const {
     register,
