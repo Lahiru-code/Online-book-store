@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import { useCreateOrderMutation } from "../../redux/features/orders/ordersApi";
+import Swal from "sweetalert2";
 
 const CheckoutPage = () => {
   const cartItems = useSelector((state) => state.cart.cartItems);
@@ -19,24 +21,46 @@ const CheckoutPage = () => {
     watch,
     formState: { errors },
   } = useForm();
+
+  const [createOrder, { isLoading, error }] = useCreateOrderMutation();
+  const navigate = useNavigate();
+
   const [isChecked, setIsChecked] = useState(false);
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     const newOrder = {
       name: data.name,
       email: currentUser?.email,
-      adress: {
+      address: {
         city: data.city,
         country: data.country,
         state: data.state,
         zipcode: data.zipcode,
       },
       phone: data.phone,
-      productIDs: cartItems.map((item) => item?._id),
+      productIds: cartItems.map((item) => item?._id),
       totalPrice: totalPrice,
     };
 
-    console.log(newOrder);
+    try {
+      await createOrder(newOrder).unwrap();
+      Swal.fire({
+        title: "Confirmed Order",
+        text: "Your order placed succesfully!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, It's Okay!",
+      });
+
+      navigate("/orders");
+    } catch (error) {
+      console.error("Error place an order", error);
+      alert("Failed to place an order");
+    }
   };
+
+  if (isLoading) return <div>Loading.....</div>;
 
   return (
     <section>
@@ -92,6 +116,7 @@ const CheckoutPage = () => {
                         type="number"
                         name="phone"
                         id="phone"
+                        {...register("phone", { required: true })}
                         className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
                         placeholder="+123 456 7890"
                       />
@@ -114,6 +139,7 @@ const CheckoutPage = () => {
                         type="text"
                         name="city"
                         id="city"
+                        {...register("city", { required: true })}
                         className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
                         placeholder=""
                       />
@@ -126,6 +152,7 @@ const CheckoutPage = () => {
                           name="country"
                           id="country"
                           placeholder="Country"
+                          {...register("country", { required: true })}
                           className="px-4 appearance-none outline-none text-gray-800 w-full bg-transparent"
                         />
                         <button
@@ -171,6 +198,7 @@ const CheckoutPage = () => {
                           name="state"
                           id="state"
                           placeholder="State"
+                          {...register("state", { required: true })}
                           className="px-4 appearance-none outline-none text-gray-800 w-full bg-transparent"
                         />
                         <button className="cursor-pointer outline-none focus:outline-none transition-all text-gray-300 hover:text-red-600">
@@ -212,6 +240,7 @@ const CheckoutPage = () => {
                         type="text"
                         name="zipcode"
                         id="zipcode"
+                        {...register("zipcode", { required: true })}
                         className="transition-all flex items-center h-10 border mt-1 rounded px-4 w-full bg-gray-50"
                         placeholder=""
                       />

@@ -1,10 +1,11 @@
 import React from "react";
 import { FiShoppingCart } from "react-icons/fi";
 import { useParams } from "react-router-dom";
-import { useFetchBookByIdQuery } from "../../redux/features/cart/bookApi";
+
 import { getImgUrl } from "../../utils/getingUrl";
 import { addToCart } from "../../redux/features/cart/cartSlice";
 import { useDispatch } from "react-redux";
+import { useFetchBookByIdQuery } from "../../redux/features/books/bookApi";
 
 const SingleBook = () => {
   const { id } = useParams();
