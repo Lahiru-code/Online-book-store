@@ -15,7 +15,9 @@ endpoints:(builder)=>({
             method:"POST",
             body:newOrder,
             credentials:"include",
-        })
+        }),
+
+         invalidatesTags: ['Orders'],
     }),
     getOrdersByEmail:builder.query({
         query:(email)=>({

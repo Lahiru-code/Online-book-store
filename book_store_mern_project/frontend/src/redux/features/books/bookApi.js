@@ -56,7 +56,7 @@ invalidatesTags:["Books"]
      deleteBook:builder.mutation({
         query:(id)=>({
             url:`/${id}`,
-            metod:"DELETE"
+            method:"DELETE"
         }),
         invalidatesTags:["Books"]
      })
