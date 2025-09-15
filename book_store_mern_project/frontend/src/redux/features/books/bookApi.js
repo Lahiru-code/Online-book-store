@@ -6,13 +6,13 @@ import getBaseUrl from '../../../utils/baseURL';
 const baseQuery= fetchBaseQuery({
     baseUrl:`${getBaseUrl()}/api/books`,
     credentials: 'include',
-    prepareHeaders:(Headers)=>{
+    prepareHeaders:(headers)=>{
         const token = localStorage.getItem('token');
         if(token){
-            Headers.set('Authorization' ,`Bearer ${token}`);
+            headers.set('authorization' ,`Bearer ${token}`);
         }
 
-        return Headers;
+        return headers;
     }
 
 })
@@ -34,21 +34,20 @@ addBook:builder.mutation({
     query:(newBook)=>({
         url:`/create-book`,
         method:"POST",  // required define request ( except get request )
-        body:newBook
+        body:newBook,
+        
     }),
 
     invalidatesTags:["Books"]
 
 }), // add book request is a  post request .so we use [builder.mutation] 
 
-UpdateBook:builder.mutation({
+updateBook:builder.mutation({
     query:({id,...rest})=>({
         url:`/edit/${id}`,
         method:"PUT",  // required define request ( except get request )
         body:rest,
-        headers:{
-            'Content-Type':'application/json'
-        }
+        
 }),
 invalidatesTags:["Books"]
      }),

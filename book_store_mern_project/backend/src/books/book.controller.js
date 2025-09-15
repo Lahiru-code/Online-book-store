@@ -65,7 +65,7 @@ const UpdateBook = async (req, res) =>{
 
 }
 
-
+//delete book
 const deleteABook = async (req,res)=>{
     try {
         const {id}=req.params;

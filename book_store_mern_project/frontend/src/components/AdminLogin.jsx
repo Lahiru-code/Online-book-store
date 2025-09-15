@@ -30,7 +30,7 @@ const AdminLogin = () => {
       const auth = response.data;
       console.log(auth);
 
-      if (auth.tokenn) {
+      if (auth.token) {
         localStorage.setItem("token", auth.token);
 
         setTimeout(() => {
